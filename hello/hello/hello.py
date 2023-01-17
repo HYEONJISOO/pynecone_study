@@ -9,7 +9,23 @@ filename = f"{config.app_name}/{config.app_name}.py"
 
 class State(pc.State):
     """The app state."""
-    count: int =0
+    count: int = 0
+
+    # the colors to cycle through
+    colors = ["black", "red", "green", "blue", "purple"]
+
+    # the index of the current color
+    index = 0
+
+    def next_color(self):
+        """Cycle to the next color"""
+        self.index = (self.index + 1) % len(self.colors)
+
+    @pc.var
+    def color(self):
+        return self.colors[self.index]
+
+
 
     def increment(self):
         self.count += 1
@@ -20,7 +36,11 @@ class State(pc.State):
 
 
 def index():
-    return pc.text("ROot Page")
+    return pc.heading(
+        "Root Page",
+        on_click=State.next_color,
+        color=State.color,
+        _hover={"cursor":"pointer"})
 
 def about():
     return pc.text("About Page")
